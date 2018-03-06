@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block content %}
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>Recently new</h1>
+    </div>
+</div>
+<div class="row">
+        <div class="col-xs-12">
+                <ul class="list-group">
+                {% for catalog in recently_new %}
+                    <li class="list-group-item"><a href = "{{url_for('showMenu', catalog_id = catalog.id)}}">{{catalog.name}}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+</div>
+{% endblock %}

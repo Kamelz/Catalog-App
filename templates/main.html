@@ -1,14 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-	</head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>Item catalog</title>
+
+		<!-- Bootstrap core CSS -->
+		<link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+		<link href="{{ url_for('static',filename='css/simple-sidebar.css') }}" rel="stylesheet">
+		<script src="{{ url_for('static',filename='js/jquery.js') }}">
+		</script>
+
+		<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+
+
+		<!-- Custom styles for this template -->
+		<style>
+			body {
+			padding-top: 54px;
+			}
+			@media (min-width: 992px) {
+				body {
+					padding-top: 56px;
+				}
+			}
+
+		</style>
+
+		</head>		
 	<body>
-		<div class="container">
-			{% block content %}
-			{% endblock %}
+			{% if catalogs %}
+			<div id="wrapper" class="toggled">
+			{% else %}
+			<div id="wrapper">
+			{% endif %}
+			<!-- Sidebar -->
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					{% if 'username' in session %}
+					<li class="sidebar-brand">
+						<a style="margin-bottom:1%; font-weight:bold;" href="{{url_for('newCatalog')}}">Add catalog </a>
+					</li>
+					{% endif %}
+					{% for catalog in catalogs %}
+					<li>
+						<a href = "{{url_for('showMenu', catalog_id = catalog.id)}}">
+							{{catalog.name}}</a>
+					</li>
+				{% endfor %}
+				</ul>
+			</div>
+			<!-- /#sidebar-wrapper -->
+	
+			<!-- Page Content -->
+			<div id="page-content-wrapper">
+				<div class="container-fluid">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+			<!-- /#page-content-wrapper -->
 		</div>
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="/">Catalog App</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ml-auto">
+	
+						<li class="nav-item">
+							{%if 'username' not in session %}
+							<a class="nav-link" href="{{url_for('showLogin')}}">Click Here to Login </a>
+							{% else %}
+							<a class="nav-link" href="{{url_for('disconnect')}}">Logout </a>
+							{% endif %}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
 	</body>
 </html>
