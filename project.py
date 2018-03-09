@@ -464,9 +464,13 @@ def newMenuItem(catalog_id):
 @app.route("""/catalog/<int:catalog_id>/item
 /<int:menu_id>/edit""", methods=['GET', 'POST'])
 def editCatalogItem(catalog_id, menu_id):
-
+	if 'username' not in login_session:
+        redirect('/login')
     editedItem = session.query(MenuItem).filter_by(id=menu_id).one()
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
+    if catalog.user_id != login_session['user_id']:
+	    return """<script>alert('You are not
+    authorized to edit this catalog.')</script>"""
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -490,6 +494,11 @@ def editCatalogItem(catalog_id, menu_id):
 def deleteCatalogItem(catalog_id, menu_id):
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
     itemToDelete = session.query(MenuItem).filter_by(id=menu_id).one()
+    if 'username' not in login_session:
+        redirect('/login')
+    if itemToDelete.user_id != login_session['user_id']:
+        return """<script>alert('You are not
+    authorized to delete this item.')</script>"""
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
