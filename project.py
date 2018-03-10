@@ -397,8 +397,10 @@ def deleteCatalog(catalog_id):
     if 'username' not in login_session:
         redirect('/login')
     if catalogToDelete.user_id != login_session['user_id']:
-        return """<script>alert('You are not
-    authorized to delete this catalog.')</script>"""
+        js = "<script>alert('You are no authorized to "
+        js += "delete this catalog."
+        js += "')</script>"
+        return js
     if request.method == 'POST':
         session.delete(catalogToDelete)
         flash('%s Successfully Deleted' % catalogToDelete.name)
@@ -464,13 +466,13 @@ def newMenuItem(catalog_id):
 @app.route("""/catalog/<int:catalog_id>/item
 /<int:menu_id>/edit""", methods=['GET', 'POST'])
 def editCatalogItem(catalog_id, menu_id):
-	if 'username' not in login_session:
-        redirect('/login')
     editedItem = session.query(MenuItem).filter_by(id=menu_id).one()
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
     if catalog.user_id != login_session['user_id']:
-	    return """<script>alert('You are not
-    authorized to edit this catalog.')</script>"""
+        js = "<script>alert('You are no authorized to "
+        js += "edit this catalog."
+        js += "')</script>"
+        return js
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -497,8 +499,10 @@ def deleteCatalogItem(catalog_id, menu_id):
     if 'username' not in login_session:
         redirect('/login')
     if itemToDelete.user_id != login_session['user_id']:
-        return """<script>alert('You are not
-    authorized to delete this item.')</script>"""
+        js = "<script>alert('You are no authorized to "
+        js += "delete this item."
+        js += "')</script>"
+        return js
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
