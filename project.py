@@ -378,8 +378,15 @@ def newCatalog():
 
 @app.route('/catalog/<int:catalog_id>/edit/', methods=['GET', 'POST'])
 def editCatalog(catalog_id):
+    if 'username' not in login_session:
+        redirect('/login')
     editedcatalog = session.query(
         Catalog).filter_by(id=catalog_id).one()
+    if editedcatalog.user_id != login_session['user_id']:
+        js = "<script>alert('You are no authorized to "
+        js += "edit this catalog."
+        js += "')</script>"
+        return js
     if request.method == 'POST':
         if request.form['name']:
             editedcatalog.name = request.form['name']
@@ -392,6 +399,8 @@ def editCatalog(catalog_id):
 # Delete a catalog
 @app.route('/catalog/<int:catalog_id>/delete/', methods=['GET', 'POST'])
 def deleteCatalog(catalog_id):
+    if 'username' not in login_session:
+        redirect('/login')
     catalogToDelete = session.query(
         Catalog).filter_by(id=catalog_id).one()
     if 'username' not in login_session:
@@ -446,6 +455,8 @@ def showMenu(catalog_id):
 @app.route("""/catalog/<int:catalog_id>/menu/
 new/""", methods=['GET', 'POST'])
 def newMenuItem(catalog_id):
+    if 'username' not in login_session:
+        redirect('/login')
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
     if request.method == 'POST':
         newItem = MenuItem(
@@ -466,6 +477,8 @@ def newMenuItem(catalog_id):
 @app.route("""/catalog/<int:catalog_id>/item
 /<int:menu_id>/edit""", methods=['GET', 'POST'])
 def editCatalogItem(catalog_id, menu_id):
+    if 'username' not in login_session:
+        redirect('/login')
     editedItem = session.query(MenuItem).filter_by(id=menu_id).one()
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
     if catalog.user_id != login_session['user_id']:
